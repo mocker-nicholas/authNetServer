@@ -13,8 +13,9 @@ app.get("/", (req, res) => {
   res.send("myLittleServer is running");
 });
 
-app.get("/transactions", async (req, res) => {
-  const response = await getTransactions();
+app.get("/transactions/:offset", async (req, res) => {
+  const { offset } = req.params;
+  const response = await getTransactions(offset);
   res.json(response);
 });
 

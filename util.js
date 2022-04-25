@@ -7,7 +7,8 @@ export const headers = new Headers();
 headers.append("Content-Type", "application/json");
 headers.append("authorization", process.env.iQ_PRO_KEY);
 
-export const getTransactions = async () => {
+export const getTransactions = async (offset) => {
+  console.log(offset);
   const yesterday =
     new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
       .toISOString()
@@ -26,7 +27,7 @@ export const getTransactions = async () => {
           end_date: today,
         },
         limit: 20,
-        offset: 0,
+        offset: parseInt(offset),
       }),
     }
   );

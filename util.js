@@ -1,5 +1,6 @@
 import fetch, { Headers } from "node-fetch";
 import dotenv from "dotenv";
+import axios from "axios";
 dotenv.config();
 
 // Set Headers for iQ Pro requests
@@ -8,7 +9,6 @@ headers.append("Content-Type", "application/json");
 headers.append("authorization", process.env.iQ_PRO_KEY);
 
 export const getTransactions = async (offset) => {
-  console.log(offset);
   const yesterday =
     new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
       .toISOString()
@@ -29,6 +29,18 @@ export const getTransactions = async (offset) => {
         limit: 20,
         offset: parseInt(offset),
       }),
+    }
+  );
+  const data = await response.json();
+  return data;
+};
+
+export const getSingleTransaction = async (id) => {
+  const response = await fetch(
+    `https://sandbox.basysiqpro.com/api/transaction/${id}`,
+    {
+      method: "GET",
+      headers: headers,
     }
   );
   const data = await response.json();

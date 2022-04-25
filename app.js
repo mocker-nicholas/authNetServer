@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import { getTransactions } from "./util.js";
+import { getTransactions, getSingleTransaction } from "./util.js";
 import cors from "cors";
 
 const app = express();
@@ -16,6 +16,13 @@ app.get("/", (req, res) => {
 app.get("/transactions/:offset", async (req, res) => {
   const { offset } = req.params;
   const response = await getTransactions(offset);
+  res.json(response);
+});
+
+app.get("/transaction/:id", async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  const response = await getSingleTransaction(id);
   res.json(response);
 });
 

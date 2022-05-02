@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
-import { getTransactions, getSingleTransaction } from "./util.js";
 import cors from "cors";
+import { generateTransaction } from "./util.js";
 
 const app = express();
 dotenv.config();
@@ -13,16 +13,13 @@ app.get("/", (req, res) => {
   res.send("myLittleServer is running");
 });
 
-app.get("/transactions/:offset", async (req, res) => {
-  const { offset } = req.params;
-  const response = await getTransactions(offset);
-  res.json(response);
+app.post("/api/transaction/search", (req, res) => {
+  res.json(req.body);
 });
 
-app.get("/transaction/:id", async (req, res) => {
-  const { id } = req.params;
-  console.log(id);
-  const response = await getSingleTransaction(id);
+app.post("/api/transaction/generate", async (req, res) => {
+  const response = await generateTransaction();
+  console.log(response);
   res.json(response);
 });
 

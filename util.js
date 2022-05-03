@@ -69,7 +69,7 @@ export const generateTransaction = async () => {
   return response.data.transactionResponse;
 };
 
-export const searchTransactions = async (body) => {
+const searchUnsettledTransactions = async (body) => {
   const response = await axios.post(baseUrl, {
     getUnsettledTransactionListRequest: {
       merchantAuthentication: authentication,
@@ -90,4 +90,34 @@ export const searchTransactions = async (body) => {
 
   const data = await formatTransactions(response.data.transactions);
   return data;
+};
+
+const searchSettledTransactions = async (body) => {
+  console.log(body);
+  const response = await axios.post(baseUrl, {
+    getSettledBatchListRequest: {
+      merchantAuthentication: authentication,
+      firstSettlementDate: `${body.firstDate}T00:00:00Z`,
+      lastSettlementDate: `${body.lastDate}T00:00:00Z`,
+    },
+  });
+
+  if (!response.data.batchList) {
+    return [];
+  }
+
+  console.log(response.data.batchList);
+
+  return [];
+};
+
+export const searchTransactions = async (body) => {
+  if (body.status === "unsettled") {
+    const response = await searchUnsettledTransactions(body);
+    return response;
+  }
+  if (body.status === "settled") {
+    const response = await searchSettledTransactions(body);
+    // console.log(response);
+  }
 };

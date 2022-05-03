@@ -14,7 +14,8 @@ app.get("/", (req, res) => {
 });
 
 app.post("/api/transaction/search", async (req, res) => {
-  const response = await searchTransactions();
+  console.log(req.body);
+  const response = await searchTransactions(req.body);
   return res.json(response);
 });
 

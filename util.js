@@ -9,6 +9,24 @@ const authentication = {
   transactionKey: process.env.AUTH_NET_KEY,
 };
 
+export const formatTransactions = (transactions) => {
+  const frontEndTransactions = transactions.map((trans) => {
+    const newDate = new Date(trans.submitTimeLocal).toLocaleDateString();
+    const newTime = new Date(trans.submitTimeLocal).toLocaleTimeString();
+    const newStatus =
+      trans.transactionStatus === "capturedPendingSettlement"
+        ? "Pending Settlement"
+        : "Other";
+    const newTranObj = {
+      ...trans,
+      submitTimeLocal: `${newDate + " " + newTime}`,
+      transactionStatus: newStatus,
+    };
+    return newTranObj;
+  });
+  return frontEndTransactions;
+};
+
 export const generateTransaction = async () => {
   const amount = ((Math.random() * 10000) / 100).toFixed(2);
   const response = await axios.post(baseUrl, {
@@ -61,11 +79,15 @@ export const searchTransactions = async (body) => {
       },
       paging: {
         limit: "20",
-        offset: "1",
+        offset: body.offset,
       },
     },
   });
 
-  const data = response.data;
+  if (!response.data.transactions) {
+    return [];
+  }
+
+  const data = await formatTransactions(response.data.transactions);
   return data;
 };

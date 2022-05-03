@@ -50,3 +50,22 @@ export const generateTransaction = async () => {
   });
   return response.data.transactionResponse;
 };
+
+export const searchTransactions = async (body) => {
+  const response = await axios.post(baseUrl, {
+    getUnsettledTransactionListRequest: {
+      merchantAuthentication: authentication,
+      sorting: {
+        orderBy: "submitTimeUTC",
+        orderDescending: true,
+      },
+      paging: {
+        limit: "20",
+        offset: "1",
+      },
+    },
+  });
+
+  const data = response.data;
+  return data;
+};

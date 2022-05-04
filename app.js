@@ -1,7 +1,10 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import { generateTransaction, searchTransactions } from "./util.js";
+import {
+  generateTransaction,
+  searchTransactions,
+} from "./controller/transactionController.js";
 
 const app = express();
 dotenv.config();

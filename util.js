@@ -16,7 +16,7 @@ export const formatTransactions = (transactions) => {
     const newStatus =
       trans.transactionStatus === "capturedPendingSettlement"
         ? "Pending Settlement"
-        : "Other";
+        : "settled" || "Other";
     const newTranObj = {
       ...trans,
       submitTimeLocal: `${newDate + " " + newTime}`,
@@ -92,6 +92,25 @@ const searchUnsettledTransactions = async (body) => {
   return data;
 };
 
+const getBatch = async (id) => {
+  const response = await axios.post(baseUrl, {
+    getTransactionListRequest: {
+      merchantAuthentication: authentication,
+      batchId: id,
+      sorting: {
+        orderBy: "submitTimeUTC",
+        orderDescending: "true",
+      },
+      paging: {
+        limit: "100",
+        offset: "1",
+      },
+    },
+  });
+  const data = response.data;
+  return data;
+};
+
 const searchSettledTransactions = async (body) => {
   console.log(body);
   const response = await axios.post(baseUrl, {
@@ -104,11 +123,19 @@ const searchSettledTransactions = async (body) => {
 
   if (!response.data.batchList) {
     return [];
+  } else {
+    let totalTransactions = [];
+    const batches = response.data.batchList;
+    for (let batch of batches) {
+      const data = await getBatch(batch.batchId);
+      const transactions = data.transactions;
+      for (let i = 0; i < transactions.length; i++) {
+        totalTransactions.push(transactions[i]);
+      }
+    }
+    const data = formatTransactions(totalTransactions);
+    return data;
   }
-
-  console.log(response.data.batchList);
-
-  return [];
 };
 
 export const searchTransactions = async (body) => {
@@ -118,6 +145,6 @@ export const searchTransactions = async (body) => {
   }
   if (body.status === "settled") {
     const response = await searchSettledTransactions(body);
-    // console.log(response);
+    return response;
   }
 };

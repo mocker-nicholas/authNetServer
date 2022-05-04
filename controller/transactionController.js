@@ -2,7 +2,6 @@ import axios from "axios";
 import {
   baseUrl,
   authentication,
-  formatTransactions,
   searchSettledTransactions,
   searchUnsettledTransactions,
 } from "../util.js";

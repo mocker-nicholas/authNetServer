@@ -9,14 +9,22 @@ export const authentication = {
   transactionKey: process.env.AUTH_NET_KEY,
 };
 
-export const formatTransactions = (transactions) => {
+const formatTransactions = (transactions) => {
   const frontEndTransactions = transactions.map((trans) => {
     const newDate = new Date(trans.submitTimeLocal).toLocaleDateString();
     const newTime = new Date(trans.submitTimeLocal).toLocaleTimeString();
-    const newStatus =
-      trans.transactionStatus === "capturedPendingSettlement"
-        ? "Pending Settlement"
-        : "Other";
+    let newStatus;
+    switch (trans.transactionStatus) {
+      case "capturedPendingSettlement":
+        newStatus = "Pending Settlement";
+        break;
+      case "settledSuccessfully":
+        newStatus = "Settled";
+        break;
+      case "FDSPendingReview":
+        newStatus = "Needs review";
+        break;
+    }
     const newTranObj = {
       ...trans,
       submitTimeLocal: `${newDate + " " + newTime}`,

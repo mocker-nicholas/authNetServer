@@ -4,6 +4,7 @@ import cors from "cors";
 import {
   generateTransaction,
   searchTransactions,
+  getTransaction,
 } from "./controller/transactionController.js";
 
 const app = express();
@@ -14,6 +15,15 @@ app.use(cors({ origin: "http://localhost:3000" }));
 
 app.get("/", (req, res) => {
   res.send("authNetServer is online");
+});
+
+app.get("/transaction/:id", async (req, res) => {
+  const { id } = req.params;
+  const response = await getTransaction(id);
+  if (response) {
+    return res.json(response);
+  }
+  return "Error";
 });
 
 app.post("/api/transaction/search", async (req, res) => {

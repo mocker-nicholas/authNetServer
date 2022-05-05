@@ -60,3 +60,14 @@ export const searchTransactions = async (body) => {
     return response;
   }
 };
+
+export const getTransaction = async (id) => {
+  const response = await axios.post(baseUrl, {
+    getTransactionDetailsRequest: {
+      merchantAuthentication: authentication,
+      transId: id,
+    },
+  });
+  const data = response.data;
+  return data;
+};

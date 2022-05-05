@@ -10,29 +10,33 @@ export const authentication = {
 };
 
 const formatTransactions = (transactions) => {
-  const frontEndTransactions = transactions.map((trans) => {
-    const newDate = new Date(trans.submitTimeLocal).toLocaleDateString();
-    const newTime = new Date(trans.submitTimeLocal).toLocaleTimeString();
-    let newStatus;
-    switch (trans.transactionStatus) {
-      case "capturedPendingSettlement":
-        newStatus = "Pending Settlement";
-        break;
-      case "settledSuccessfully":
-        newStatus = "Settled";
-        break;
-      case "FDSPendingReview":
-        newStatus = "Needs review";
-        break;
-    }
-    const newTranObj = {
-      ...trans,
-      submitTimeLocal: `${newDate + " " + newTime}`,
-      transactionStatus: newStatus,
-    };
-    return newTranObj;
-  });
-  return frontEndTransactions;
+  if (transactions) {
+    const frontEndTransactions = transactions.map((trans) => {
+      const newDate = new Date(trans.submitTimeLocal).toLocaleDateString();
+      const newTime = new Date(trans.submitTimeLocal).toLocaleTimeString();
+      let newStatus;
+      switch (trans.transactionStatus) {
+        case "capturedPendingSettlement":
+          newStatus = "Pending Settlement";
+          break;
+        case "settledSuccessfully":
+          newStatus = "Settled";
+          break;
+        case "FDSPendingReview":
+          newStatus = "Needs review";
+          break;
+      }
+      const newTranObj = {
+        ...trans,
+        submitTimeLocal: `${newDate + " " + newTime}`,
+        transactionStatus: newStatus,
+      };
+      return newTranObj;
+    });
+    return frontEndTransactions;
+  } else {
+    return [];
+  }
 };
 
 export const searchUnsettledTransactions = async (body) => {

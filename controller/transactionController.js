@@ -72,4 +72,21 @@ export const getTransaction = async (id) => {
   return newData;
 };
 
+export const voidTransaction = async (id) => {
+  const response = await axios.post(baseUrl, {
+    createTransactionRequest: {
+      merchantAuthentication: authentication,
+      refId: "voidThisTransaction",
+      transactionRequest: {
+        transactionType: "voidTransaction",
+        refTransId: id,
+      },
+    },
+  });
+  if (response.data) {
+    return response.data;
+  }
+  return [];
+};
+
 generateTransaction();

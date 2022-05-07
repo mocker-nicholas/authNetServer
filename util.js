@@ -25,11 +25,15 @@ export const formatTransactions = (transactions) => {
         case "FDSPendingReview":
           newStatus = "Needs review";
           break;
+        case "voided":
+          newStatus = "Voided";
+          break;
       }
       let newType;
       switch (trans.transactionType) {
         case "authCaptureTransaction":
           newType = "Auth Capture";
+          break;
       }
       const newTranObj = {
         ...trans,

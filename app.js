@@ -5,6 +5,7 @@ import {
   generateTransaction,
   searchTransactions,
   getTransaction,
+  voidTransaction,
 } from "./controller/transactionController.js";
 
 const app = express();
@@ -15,6 +16,13 @@ app.use(cors({ origin: "http://localhost:3000" }));
 
 app.get("/", (req, res) => {
   res.send("authNetServer is online");
+});
+
+app.post("/transaction/:id/void", async (req, res) => {
+  const { id } = req.params;
+  const response = await voidTransaction(id);
+  console.log(response);
+  return res.json(response);
 });
 
 app.get("/transaction/:id", async (req, res) => {

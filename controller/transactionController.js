@@ -4,6 +4,7 @@ import {
   authentication,
   searchSettledTransactions,
   searchUnsettledTransactions,
+  formatTransactions,
 } from "../util.js";
 
 export const generateTransaction = async () => {
@@ -48,8 +49,6 @@ export const generateTransaction = async () => {
   return response.data.transactionResponse;
 };
 
-generateTransaction();
-
 export const searchTransactions = async (body) => {
   if (body.status === "unsettled") {
     const response = await searchUnsettledTransactions(body);
@@ -68,6 +67,9 @@ export const getTransaction = async (id) => {
       transId: id,
     },
   });
-  const data = response.data;
-  return data;
+  const data = formatTransactions([response.data.transaction]);
+  const newData = data[0];
+  return newData;
 };
+
+generateTransaction();

@@ -9,7 +9,7 @@ export const authentication = {
   transactionKey: process.env.AUTH_NET_KEY,
 };
 
-const formatTransactions = (transactions) => {
+export const formatTransactions = (transactions) => {
   if (transactions) {
     const frontEndTransactions = transactions.map((trans) => {
       const newDate = new Date(trans.submitTimeLocal).toLocaleDateString();
@@ -26,10 +26,16 @@ const formatTransactions = (transactions) => {
           newStatus = "Needs review";
           break;
       }
+      let newType;
+      switch (trans.transactionType) {
+        case "authCaptureTransaction":
+          newType = "Auth Capture";
+      }
       const newTranObj = {
         ...trans,
         submitTimeLocal: `${newDate + " " + newTime}`,
         transactionStatus: newStatus,
+        transactionType: newType,
       };
       return newTranObj;
     });

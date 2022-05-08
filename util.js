@@ -28,11 +28,17 @@ export const formatTransactions = (transactions) => {
         case "voided":
           newStatus = "Voided";
           break;
+        case "refundPendingSettlement":
+          newStatus = "Refund Pending";
+          break;
       }
       let newType;
       switch (trans.transactionType) {
         case "authCaptureTransaction":
           newType = "Auth Capture";
+          break;
+        case "refundTransaction":
+          newType = "Refund";
           break;
       }
       const newTranObj = {

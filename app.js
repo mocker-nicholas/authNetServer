@@ -6,6 +6,7 @@ import {
   searchTransactions,
   getTransaction,
   voidTransaction,
+  refundTransaction,
 } from "./controller/transactionController.js";
 
 const app = express();
@@ -21,7 +22,13 @@ app.get("/", (req, res) => {
 app.post("/transaction/:id/void", async (req, res) => {
   const { id } = req.params;
   const response = await voidTransaction(id);
-  console.log(response);
+  return res.json(response);
+});
+
+app.post("/transaction/:id/refund", async (req, res) => {
+  const { id } = req.params;
+  const body = req.body;
+  const response = await refundTransaction(body);
   return res.json(response);
 });
 
@@ -41,7 +48,6 @@ app.post("/api/transaction/search", async (req, res) => {
 
 app.post("/api/transaction/generate", async (req, res) => {
   const response = await generateTransaction();
-  console.log(response);
   return res.json(response);
 });
 

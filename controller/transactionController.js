@@ -89,4 +89,28 @@ export const voidTransaction = async (id) => {
   return [];
 };
 
+export const refundTransaction = async (body) => {
+  const response = await axios.post(baseUrl, {
+    createTransactionRequest: {
+      merchantAuthentication: authentication,
+      transactionRequest: {
+        transactionType: "refundTransaction",
+        amount: body.amount,
+        payment: {
+          creditCard: {
+            cardNumber: body.cardNumber.slice(3),
+            expirationDate: "XXXX",
+          },
+        },
+        refTransId: body.id,
+      },
+    },
+  });
+  if (response.data) {
+    return response.data;
+  }
+  return [];
+};
+
+generateTransaction();
 generateTransaction();

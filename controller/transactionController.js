@@ -2,10 +2,12 @@ import axios from "axios";
 import {
   baseUrl,
   authentication,
+  pickRand,
   searchSettledTransactions,
   searchUnsettledTransactions,
   formatTransactions,
 } from "../util.js";
+import { zip, card } from "../data.js";
 
 export const generateTransaction = async () => {
   const amount = ((Math.random() * 10000) / 100).toFixed(2);
@@ -18,7 +20,7 @@ export const generateTransaction = async () => {
         amount: amount,
         payment: {
           creditCard: {
-            cardNumber: "4007000000027",
+            cardNumber: pickRand(card),
             expirationDate: "2025-12",
             cardCode: "232",
           },
@@ -30,7 +32,7 @@ export const generateTransaction = async () => {
           address: "12 Main Street",
           city: "Lenexa",
           state: "KS",
-          zip: "66215",
+          zip: pickRand(zip),
           country: "US",
         },
         shipTo: {

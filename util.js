@@ -9,6 +9,10 @@ export const authentication = {
   transactionKey: process.env.AUTH_NET_KEY,
 };
 
+export const pickRand = (arr) => {
+  return arr[Math.floor(Math.random() * arr.length)];
+};
+
 export const formatTransactions = (transactions) => {
   if (transactions) {
     const frontEndTransactions = transactions.map((trans) => {
@@ -30,6 +34,9 @@ export const formatTransactions = (transactions) => {
           break;
         case "refundPendingSettlement":
           newStatus = "Refund Pending";
+          break;
+        case "declined":
+          newStatus = "Declined";
           break;
       }
       let newType;

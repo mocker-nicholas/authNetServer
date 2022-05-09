@@ -38,6 +38,12 @@ export const formatTransactions = (transactions) => {
         case "declined":
           newStatus = "Declined";
           break;
+        case "expired":
+          newStatus = "EXPIRED";
+          break;
+        case "refundSettledSuccessfully":
+          newStatus = "Refunded";
+          break;
       }
       let newType;
       switch (trans.transactionType) {

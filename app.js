@@ -19,6 +19,15 @@ app.get("/", (req, res) => {
   res.send("authNetServer is online");
 });
 
+// app.post("/test", async (req, res) => {
+//   console.log("gotme");
+//   const response = await searchTransactions({
+//     status: "unsettled",
+//     offset: 1,
+//     firstDate: "2022-05-04",
+//   });
+// });
+
 app.post("/transaction/:id/void", async (req, res) => {
   const { id } = req.params;
   const response = await voidTransaction(id);

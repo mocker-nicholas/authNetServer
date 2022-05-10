@@ -18,7 +18,7 @@ export const formatTransactions = (transactions) => {
     const frontEndTransactions = transactions.map((trans) => {
       const newDate = new Date(trans.submitTimeLocal).toLocaleDateString();
       const newTime = new Date(trans.submitTimeLocal).toLocaleTimeString();
-      let newStatus;
+      let newStatus = null;
       switch (trans.transactionStatus) {
         case "capturedPendingSettlement":
           newStatus = "Pending Settlement";
@@ -45,14 +45,16 @@ export const formatTransactions = (transactions) => {
           newStatus = "Refunded";
           break;
       }
-      let newType;
-      switch (trans.transactionType) {
-        case "authCaptureTransaction":
-          newType = "Auth Capture";
-          break;
-        case "refundTransaction":
-          newType = "Refund";
-          break;
+      let newType = null;
+      if (trans.transactionType) {
+        switch (trans.transactionType) {
+          case "authCaptureTransaction":
+            newType = "Auth Capture";
+            break;
+          case "refundTransaction":
+            newType = "Refund";
+            break;
+        }
       }
       const newTranObj = {
         ...trans,
@@ -69,6 +71,7 @@ export const formatTransactions = (transactions) => {
 };
 
 export const searchUnsettledTransactions = async (body) => {
+  console.log(body);
   const response = await axios.post(baseUrl, {
     getUnsettledTransactionListRequest: {
       merchantAuthentication: authentication,

@@ -8,6 +8,7 @@ import {
   voidTransaction,
   refundTransaction,
 } from "./controller/transactionController.js";
+import { getFormToken } from "./controller/vtcontroller.js";
 
 const app = express();
 dotenv.config();
@@ -19,14 +20,11 @@ app.get("/", (req, res) => {
   res.send("authNetServer is online");
 });
 
-// app.post("/test", async (req, res) => {
-//   console.log("gotme");
-//   const response = await searchTransactions({
-//     status: "unsettled",
-//     offset: 1,
-//     firstDate: "2022-05-04",
-//   });
-// });
+app.post("/vt/hosted", async (req, res) => {
+  const response = await getFormToken(req.body);
+  console.log(req.body);
+  return res.json(response);
+});
 
 app.post("/transaction/:id/void", async (req, res) => {
   const { id } = req.params;

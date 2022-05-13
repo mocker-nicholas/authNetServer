@@ -22,7 +22,6 @@ app.get("/", (req, res) => {
 
 app.post("/vt/hosted", async (req, res) => {
   const response = await getFormToken(req.body);
-  console.log(req.body);
   return res.json(response);
 });
 

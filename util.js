@@ -71,7 +71,6 @@ export const formatTransactions = (transactions) => {
 };
 
 export const searchUnsettledTransactions = async (body) => {
-  console.log(body);
   const response = await axios.post(baseUrl, {
     getUnsettledTransactionListRequest: {
       merchantAuthentication: authentication,
@@ -114,7 +113,6 @@ const getBatch = async (id, offset) => {
 };
 
 export const searchSettledTransactions = async (body) => {
-  console.log(body);
   const response = await axios.post(baseUrl, {
     getSettledBatchListRequest: {
       merchantAuthentication: authentication,

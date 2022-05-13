@@ -2,21 +2,23 @@ import axios from "axios";
 import { authentication, baseUrl } from "../util.js";
 
 export const getFormToken = async (body) => {
+  const { amount, first, last, company, street, city, state, zip, country } =
+    body.bodyState;
   const response = await axios.post(baseUrl, {
     getHostedPaymentPageRequest: {
       merchantAuthentication: authentication,
       transactionRequest: {
         transactionType: "authCaptureTransaction",
-        amount: body.amount,
+        amount: amount.value,
         billTo: {
-          firstName: body.first,
-          lastName: body.last,
-          company: body.company,
-          address: body.street,
-          city: body.city,
-          state: body.state,
-          zip: body.zip,
-          country: body.country,
+          firstName: first.value,
+          lastName: last.value,
+          company: company.value,
+          address: street.value,
+          city: city.value,
+          state: state.value,
+          zip: zip.value,
+          country: country.value,
         },
       },
       hostedPaymentSettings: {
@@ -32,7 +34,7 @@ export const getFormToken = async (body) => {
           },
           {
             settingName: "hostedPaymentStyleOptions",
-            settingValue: '{"bgColor": "blue"}',
+            settingValue: '{"bgColor": "rgb(251, 133, 0)"}',
           },
           {
             settingName: "hostedPaymentPaymentOptions",

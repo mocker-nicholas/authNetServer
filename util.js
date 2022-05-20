@@ -44,6 +44,9 @@ export const formatTransactions = (transactions) => {
         case "refundSettledSuccessfully":
           newStatus = "Refunded";
           break;
+        case "generalError":
+          newStatus = "General Error";
+          break;
       }
       let newType = null;
       if (trans.transactionType) {
@@ -120,12 +123,12 @@ export const searchSettledTransactions = async (body) => {
       lastSettlementDate: `${body.firstDate}T00:00:00Z`,
     },
   });
-
   if (!response.data.batchList) {
     return [];
   } else {
-    const batch = response.data.batchList[0];
-    const data = await getBatch(batch.batchId, body.offset);
-    return formatTransactions(data.transactions);
+    const batchId = response.data.batchList[0].batchId;
+    const batchTrans = await getBatch(batchId, body.offset);
+    const data = formatTransactions(batchTrans.transactions);
+    return data;
   }
 };

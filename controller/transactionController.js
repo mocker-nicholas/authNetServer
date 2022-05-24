@@ -1,127 +1,33 @@
 import axios from "axios";
 import {
-  baseUrl,
-  authentication,
-  pickRand,
-  searchSettledTransactions,
-  searchUnsettledTransactions,
-  formatTransactions,
+  refundTransaction,
+  voidTransaction,
+  getTransaction,
+  searchTransactions,
 } from "../util.js";
-import {
-  zip,
-  card,
-  first,
-  last,
-  company,
-  street,
-  city,
-  state,
-} from "../data.js";
 
-export const generateTransaction = async () => {
-  const amount = ((Math.random() * 10000) / 100).toFixed(2);
-  const response = await axios.post(baseUrl, {
-    createTransactionRequest: {
-      merchantAuthentication: authentication,
-      refId: "optionaluniqueId",
-      transactionRequest: {
-        transactionType: "authCaptureTransaction",
-        amount: amount,
-        payment: {
-          creditCard: {
-            cardNumber: pickRand(card),
-            expirationDate: "2025-12",
-            cardCode: "232",
-          },
-        },
-        billTo: {
-          firstName: pickRand(first),
-          lastName: pickRand(last),
-          company: pickRand(company),
-          address: pickRand(street),
-          city: pickRand(city),
-          state: pickRand(state),
-          zip: pickRand(zip),
-          country: "US",
-        },
-        shipTo: {
-          firstName: pickRand(first),
-          lastName: pickRand(last),
-          company: pickRand(company),
-          address: pickRand(street),
-          city: pickRand(city),
-          state: pickRand(state),
-          zip: "66215",
-          country: "US",
-        },
-      },
-    },
-  });
-  return response.data.transactionResponse;
+export const transactionSearch = async (req, res) => {
+  const response = await searchTransactions(req.body);
+  return res.json(response);
 };
 
-export const searchTransactions = async (body) => {
-  if (body.status === "unsettled") {
-    const response = await searchUnsettledTransactions(body);
-    return response;
+export const transactionRefund = async (req, res) => {
+  const body = req.body;
+  const response = await refundTransaction(body);
+  return res.json(response);
+};
+
+export const transactionVoid = async (req, res) => {
+  const { id } = req.params;
+  const response = await voidTransaction(id);
+  return res.json(response);
+};
+
+export const getTransactionDetails = async (req, res) => {
+  const { id } = req.params;
+  const response = await getTransaction(id);
+  if (response) {
+    return res.json(response);
   }
-  if (body.status === "settled") {
-    const response = await searchSettledTransactions(body);
-    return response;
-  }
+  return "Error";
 };
-
-export const getTransaction = async (id) => {
-  const response = await axios.post(baseUrl, {
-    getTransactionDetailsRequest: {
-      merchantAuthentication: authentication,
-      transId: id,
-    },
-  });
-  const data = formatTransactions([response.data.transaction]);
-  const newData = data[0];
-  return newData;
-};
-
-export const voidTransaction = async (id) => {
-  const response = await axios.post(baseUrl, {
-    createTransactionRequest: {
-      merchantAuthentication: authentication,
-      refId: "voidThisTransaction",
-      transactionRequest: {
-        transactionType: "voidTransaction",
-        refTransId: id,
-      },
-    },
-  });
-  if (response.data) {
-    return response.data;
-  }
-  return [];
-};
-
-export const refundTransaction = async (body) => {
-  const response = await axios.post(baseUrl, {
-    createTransactionRequest: {
-      merchantAuthentication: authentication,
-      transactionRequest: {
-        transactionType: "refundTransaction",
-        amount: body.amount,
-        payment: {
-          creditCard: {
-            cardNumber: body.cardNumber.slice(3),
-            expirationDate: "XXXX",
-          },
-        },
-        refTransId: body.id,
-      },
-    },
-  });
-  if (response.data) {
-    return response.data;
-  }
-  return [];
-};
-
-generateTransaction();
-generateTransaction();

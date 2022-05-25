@@ -1,10 +1,16 @@
 import axios from "axios";
 import {
+  generateTransaction,
   refundTransaction,
   voidTransaction,
   getTransaction,
   searchTransactions,
 } from "../util.js";
+
+export const createRandomTrans = async (req, res) => {
+  const response = await generateTransaction();
+  return res.json(response);
+};
 
 export const transactionSearch = async (req, res) => {
   const response = await searchTransactions(req.body);

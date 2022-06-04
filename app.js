@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import transactionRouter from "./routes/transactionrouter.js";
 import vtRouter from "./routes/vtrouter.js";
+import reportingRouter from "./routes/reportingrouter.js"
 import session from "express-session"
 import { sessionStuff } from "./middleware.js";
 
@@ -26,6 +27,7 @@ app.use(sessionStuff)
 ////////////////// Routers /////////////////////
 app.use("/api/transaction", transactionRouter);
 app.use("/api/vt", vtRouter);
+app.use("/api/reporting", reportingRouter)
 
 app.get("/", (req, res) => {
   res.send("authNetServer is online");

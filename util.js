@@ -186,13 +186,19 @@ export const generateTransaction = async () => {
 };
 
 export const searchTransactions = async (body) => {
-  if (body.status === "unsettled") {
-    const response = await searchUnsettledTransactions(body);
-    return response;
-  }
-  if (body.status === "settled") {
-    const response = await searchSettledTransactions(body);
-    return response;
+  try {
+    if (body.status === "unsettled") {
+      const response = await searchUnsettledTransactions(body);
+      return response;
+    }
+    if (body.status === "settled") {
+      const response = await searchSettledTransactions(body);
+      return response;
+    }
+    return ["Invalid request: Request body format incorrect"]
+  } catch (e) {
+    console.log(e)
+    return e
   }
 };
 
@@ -319,3 +325,42 @@ export const getFormToken = async (body) => {
   });
   return response.data;
 };
+
+export const getBatchStats = async (id) => {
+  const response = await axios.post(baseUrl, {
+    getBatchStatisticsRequest: {
+        merchantAuthentication: authentication,
+        batchId: id
+    }
+}
+)
+
+return response.data.batch}
+
+
+export const last7Totals = async () => {
+  const last7Totals = [];
+  const today = new Date();
+  const aWeekAgoMilli = new Date().setDate(today.getDate() - 7)
+  const lastWeek = new Date(aWeekAgoMilli)
+  const response = await axios.post(baseUrl, {
+    getSettledBatchListRequest: {
+      merchantAuthentication: authentication,
+      firstSettlementDate: lastWeek,
+      lastSettlementDate: today.toISOString(),
+    },
+  });
+  for(let batch of response.data.batchList) {
+    const response = await getBatchStats(batch.batchId)
+    const date = response.settlementTimeLocal;
+    const cardTotals = response.statistics.map((stats) => {
+      return stats.chargeAmount + stats.refundAmount;
+    })
+    const chargeTotal = cardTotals.reduce((cur, acc) => cur + acc)
+    last7Totals.push({
+      date: date,
+      total: chargeTotal
+    })
+  }
+  return last7Totals;
+}

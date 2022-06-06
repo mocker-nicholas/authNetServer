@@ -195,10 +195,10 @@ export const searchTransactions = async (body) => {
       const response = await searchSettledTransactions(body);
       return response;
     }
-    return ["Invalid request: Request body format incorrect"]
+    return ["Invalid request: Request body format incorrect"];
   } catch (e) {
-    console.log(e)
-    return e
+    console.log(e);
+    return e;
   }
 };
 
@@ -329,20 +329,19 @@ export const getFormToken = async (body) => {
 export const getBatchStats = async (id) => {
   const response = await axios.post(baseUrl, {
     getBatchStatisticsRequest: {
-        merchantAuthentication: authentication,
-        batchId: id
-    }
-}
-)
+      merchantAuthentication: authentication,
+      batchId: id,
+    },
+  });
 
-return response.data.batch}
-
+  return response.data.batch;
+};
 
 export const last7Totals = async () => {
   const last7Totals = [];
   const today = new Date();
-  const aWeekAgoMilli = new Date().setDate(today.getDate() - 7)
-  const lastWeek = new Date(aWeekAgoMilli)
+  const aWeekAgoMilli = new Date().setDate(today.getDate() - 7);
+  const lastWeek = new Date(aWeekAgoMilli);
   const response = await axios.post(baseUrl, {
     getSettledBatchListRequest: {
       merchantAuthentication: authentication,
@@ -350,17 +349,49 @@ export const last7Totals = async () => {
       lastSettlementDate: today.toISOString(),
     },
   });
-  for(let batch of response.data.batchList) {
-    const response = await getBatchStats(batch.batchId)
+  for (let batch of response.data.batchList) {
+    const response = await getBatchStats(batch.batchId);
     const date = response.settlementTimeLocal;
     const cardTotals = response.statistics.map((stats) => {
       return stats.chargeAmount + stats.refundAmount;
-    })
-    const chargeTotal = cardTotals.reduce((cur, acc) => cur + acc)
+    });
+    const chargeTotal = cardTotals.reduce((cur, acc) => cur + acc);
     last7Totals.push({
       date: date,
-      total: chargeTotal
-    })
+      total: chargeTotal,
+    });
   }
   return last7Totals;
-}
+};
+
+export const getUnsettledTotal = async () => {
+  let offset = 1;
+  let arrLength = 20;
+  let transactions = [];
+  while (arrLength === 20) {
+    const response = await axios.post(baseUrl, {
+      getUnsettledTransactionListRequest: {
+        merchantAuthentication: authentication,
+        sorting: {
+          orderBy: "submitTimeUTC",
+          orderDescending: true,
+        },
+        paging: {
+          limit: "20",
+          offset: offset,
+        },
+      },
+    });
+    const trans = response.data.transactions;
+    arrLength = trans.length;
+    if (trans) {
+      trans.map((tran) => transactions.push(tran));
+      offset++;
+    }
+  }
+  const totalAmount = transactions
+    .map((tran) => tran.settleAmount)
+    .reduce((curr, accum) => parseFloat(curr) + parseFloat(accum));
+
+  return { unsettled_tota: parseFloat(totalAmount).toFixed(2) };
+};

@@ -393,5 +393,5 @@ export const getUnsettledTotal = async () => {
     .map((tran) => tran.settleAmount)
     .reduce((curr, accum) => parseFloat(curr) + parseFloat(accum));
 
-  return { unsettled_tota: parseFloat(totalAmount).toFixed(2) };
+  return { unsettled_total: parseFloat(totalAmount).toFixed(2), totalTrans: transactions.length };
 };

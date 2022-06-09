@@ -439,3 +439,39 @@ export const createCustomerWPayment = async (body) => {
     return [e];
   }
 };
+
+export const getCustomerProfile = async (id) => {
+  const response = await axios.post(baseUrl, {
+    getCustomerProfileRequest: {
+      merchantAuthentication: authentication,
+      customerProfileId: id,
+      includeIssuerInfo: "true",
+    },
+  });
+
+  return response.data;
+};
+
+export const getCustomers = async (body) => {
+  const customerIds = await axios.post(baseUrl, {
+    getCustomerProfileIdsRequest: {
+      merchantAuthentication: authentication,
+    },
+  });
+
+  if (
+    customerIds.data.messages.resultCode &&
+    customerIds.data.messages.resultCode === "Ok"
+  ) {
+    const ids = customerIds.data.ids;
+    let profiles = await Promise.all(
+      ids.map(async (id) => {
+        const response = await getCustomerProfile(id);
+        return response;
+      })
+    );
+    return profiles;
+  } else {
+    return ["Internal server error, please contact support"];
+  }
+};

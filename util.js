@@ -255,7 +255,6 @@ export const refundTransaction = async (body) => {
 };
 
 export const getFormToken = async (body) => {
-  console.log(body)
   const { amount, first, last, company, street, city, state, zip, country } =
     body;
   const response = await axios.post(baseUrl, {
@@ -388,27 +387,55 @@ export const getUnsettledTotal = async () => {
       arrLength = trans.length;
       trans.map((tran) => transactions.push(tran));
       offset++;
-    }
-
-    else {
-      return { unsettled_total: "0.00", totalTrans: "0"}
+    } else {
+      return { unsettled_total: "0.00", totalTrans: "0" };
     }
   }
   const totalAmount = transactions
     .map((tran) => tran.settleAmount)
     .reduce((curr, accum) => parseFloat(curr) + parseFloat(accum));
 
-  return { unsettled_total: parseFloat(totalAmount).toFixed(2), totalTrans: transactions.length };
+  return {
+    unsettled_total: parseFloat(totalAmount).toFixed(2),
+    totalTrans: transactions.length,
+  };
 };
 
-generateTransaction()
-generateTransaction()
-generateTransaction()
-generateTransaction()
-generateTransaction()
-generateTransaction()
-generateTransaction()
-generateTransaction()
-generateTransaction()
-generateTransaction()
-generateTransaction()
+export const createCustomerWPayment = async (body) => {
+  console.log(body);
+  try {
+    const response = await axios.post(baseUrl, {
+      createCustomerProfileRequest: {
+        merchantAuthentication: authentication,
+        profile: {
+          description: "This is a cusomer record with a payment profile",
+          email: "fakeemail@fake.com",
+          paymentProfiles: {
+            customerType: "individual",
+            billTo: {
+              firstName: "QATEST",
+              lastName: "QATEST",
+              company: "Google",
+              address: "12 Main Street",
+              city: "Lenexa",
+              state: "KS",
+              zip: "66215",
+              country: "US",
+            },
+            payment: {
+              creditCard: {
+                cardNumber: "4111111111111111",
+                expirationDate: "2025-12",
+              },
+            },
+          },
+        },
+        validationMode: "testMode",
+      },
+    });
+
+    return response.data;
+  } catch (e) {
+    return [e];
+  }
+};

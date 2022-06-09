@@ -255,8 +255,9 @@ export const refundTransaction = async (body) => {
 };
 
 export const getFormToken = async (body) => {
+  console.log(body)
   const { amount, first, last, company, street, city, state, zip, country } =
-    body.bodyState;
+    body;
   const response = await axios.post(baseUrl, {
     getHostedPaymentPageRequest: {
       merchantAuthentication: authentication,
@@ -383,10 +384,14 @@ export const getUnsettledTotal = async () => {
       },
     });
     const trans = response.data.transactions;
-    arrLength = trans.length;
     if (trans) {
+      arrLength = trans.length;
       trans.map((tran) => transactions.push(tran));
       offset++;
+    }
+
+    else {
+      return { unsettled_total: "0.00", totalTrans: "0"}
     }
   }
   const totalAmount = transactions
@@ -395,3 +400,15 @@ export const getUnsettledTotal = async () => {
 
   return { unsettled_total: parseFloat(totalAmount).toFixed(2), totalTrans: transactions.length };
 };
+
+generateTransaction()
+generateTransaction()
+generateTransaction()
+generateTransaction()
+generateTransaction()
+generateTransaction()
+generateTransaction()
+generateTransaction()
+generateTransaction()
+generateTransaction()
+generateTransaction()

@@ -403,23 +403,25 @@ export const getUnsettledTotal = async () => {
 
 export const createCustomerWPayment = async (body) => {
   console.log(body);
+  const { description, email, first, last, company, street, city, state, zip } =
+    body;
   try {
     const response = await axios.post(baseUrl, {
       createCustomerProfileRequest: {
         merchantAuthentication: authentication,
         profile: {
-          description: "This is a cusomer record with a payment profile",
-          email: "fakeemail@fake.com",
+          description: description,
+          email: email,
           paymentProfiles: {
             customerType: "individual",
             billTo: {
-              firstName: "QATEST",
-              lastName: "QATEST",
-              company: "Google",
-              address: "12 Main Street",
-              city: "Lenexa",
-              state: "KS",
-              zip: "66215",
+              firstName: first,
+              lastName: last,
+              company: company,
+              address: street,
+              city: city,
+              state: state,
+              zip: zip,
               country: "US",
             },
             payment: {

@@ -16,7 +16,6 @@ export const getAllCustomers = async (req, res, next) => {
 
 export const getSingleCustomer = async (req, res, next) => {
   const { id } = req.params;
-  console.log(id);
   const response = await getCustomerProfile(id);
   return res.json(response);
 };

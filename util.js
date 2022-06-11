@@ -209,6 +209,9 @@ export const getTransaction = async (id) => {
       transId: id,
     },
   });
+  if (response.data.messages.resultCode !== "Ok") {
+    return { error: "Resource was not found, please try again" };
+  }
   const data = formatTransactions([response.data.transaction]);
   const newData = data[0];
   return newData;

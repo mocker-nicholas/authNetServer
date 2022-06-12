@@ -251,6 +251,7 @@ export const refundTransaction = async (body) => {
       },
     },
   });
+
   if (response.data) {
     return response.data;
   }
@@ -405,7 +406,6 @@ export const getUnsettledTotal = async () => {
 };
 
 export const createCustomerWPayment = async (body) => {
-  console.log(body);
   const { description, email, first, last, company, street, city, state, zip } =
     body;
   try {
@@ -413,18 +413,18 @@ export const createCustomerWPayment = async (body) => {
       createCustomerProfileRequest: {
         merchantAuthentication: authentication,
         profile: {
-          description: description,
-          email: email,
+          description: description.value,
+          email: email.value,
           paymentProfiles: {
             customerType: "individual",
             billTo: {
-              firstName: first,
-              lastName: last,
-              company: company,
-              address: street,
-              city: city,
-              state: state,
-              zip: zip,
+              firstName: first.value,
+              lastName: last.value,
+              company: company.value,
+              address: street.value,
+              city: city.value,
+              state: state.value,
+              zip: zip.value,
               country: "US",
             },
             payment: {
@@ -441,7 +441,12 @@ export const createCustomerWPayment = async (body) => {
 
     return response.data;
   } catch (e) {
-    return [e];
+    return [
+      {
+        error:
+          "Failed to create customer, server error, please contact support",
+      },
+    ];
   }
 };
 

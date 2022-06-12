@@ -485,3 +485,24 @@ export const getCustomers = async (body) => {
     return ["Internal server error, please contact support"];
   }
 };
+
+export const chargeACustomer = async (body) => {
+  const response = await getCustomerProfile(body.id);
+  const charge = await axios.post(baseUrl, {
+    createTransactionRequest: {
+      merchantAuthentication: authentication,
+      transactionRequest: {
+        transactionType: "authCaptureTransaction",
+        amount: body.amount,
+        profile: {
+          customerProfileId: body.id,
+          paymentProfile: {
+            paymentProfileId:
+              response.profile.paymentProfiles[0].customerPaymentProfileId,
+          },
+        },
+      },
+    },
+  });
+  return charge.data;
+};

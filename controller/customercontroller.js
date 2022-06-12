@@ -2,6 +2,7 @@ import {
   createCustomerWPayment,
   getCustomers,
   getCustomerProfile,
+  chargeACustomer,
 } from "../util.js";
 
 export const createCustomer = async (req, res, next) => {
@@ -35,4 +36,9 @@ export const getSingleCustomer = async (req, res, next) => {
   } catch (e) {
     return res.json({ error: "Internal server error, please contact support" });
   }
+};
+
+export const chargeAProfile = async (req, res, next) => {
+  const response = await chargeACustomer(req.body);
+  return res.json(response);
 };

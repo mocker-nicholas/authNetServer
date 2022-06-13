@@ -15,7 +15,7 @@ dotenv.config();
 app.use(express.json());
 
 const corsOptions = {
-  origin: "https://mocker-nicholas.github.io/authy/",
+  origin: "https://mocker-nicholas.github.io",
   credentials: true,
 };
 const sessionConfig = {

@@ -15,7 +15,8 @@ dotenv.config();
 app.use(express.json());
 
 const corsOptions = {
-  origin: "https://benevolent-scone-9283d1.netlify.app",
+  origin:
+    "https://62a7cc51ccb86719ac4f73f6--benevolent-scone-9283d1.netlify.app",
   credentials: true,
 };
 const sessionConfig = {

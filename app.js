@@ -7,6 +7,7 @@ import reportingRouter from "./routes/reportingrouter.js";
 import customerRouter from "./routes/customerRouter.js";
 import session from "express-session";
 import { sessionStuff } from "./middleware.js";
+const PORT = process.env.PORT || 8080;
 
 const app = express();
 dotenv.config();
@@ -35,6 +36,6 @@ app.get("/", (req, res) => {
   res.send("authNetServer is online");
 });
 
-app.listen(8080, () => {
+app.listen(PORT, () => {
   console.log("on port 8080");
 });

@@ -14,7 +14,10 @@ dotenv.config();
 
 app.use(express.json());
 
-const corsOptions = { origin: "http://localhost:3000", credentials: true };
+const corsOptions = {
+  origin: "https://mocker-nicholas.github.io/authy/",
+  credentials: true,
+};
 const sessionConfig = {
   secret: "keyboard cat",
   resave: false,

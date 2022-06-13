@@ -15,7 +15,7 @@ dotenv.config();
 app.use(express.json());
 
 const corsOptions = {
-  origin: "https://mocker-nicholas.github.io",
+  origin: "https://benevolent-scone-9283d1.netlify.app",
   credentials: true,
 };
 const sessionConfig = {

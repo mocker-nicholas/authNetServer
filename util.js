@@ -12,6 +12,9 @@ import {
 } from "./data.js";
 dotenv.config();
 
+////////////////////////// Utility Functions /////////////////////////////////////
+////////////////////////// Utility Functions /////////////////////////////////////
+////////////////////////// Utility Functions /////////////////////////////////////
 export const baseUrl = "https://apitest.authorize.net/xml/v1/request.api";
 
 export const authentication = {
@@ -83,6 +86,9 @@ export const formatTransactions = (transactions) => {
   }
 };
 
+////////////////////////// Transaction Searches /////////////////////////////////////
+////////////////////////// Transaction Searches /////////////////////////////////////
+////////////////////////// Transaction Searches /////////////////////////////////////
 export const searchUnsettledTransactions = async (body) => {
   const response = await axios.post(baseUrl, {
     getUnsettledTransactionListRequest: {
@@ -143,6 +149,41 @@ export const searchSettledTransactions = async (body) => {
   }
 };
 
+export const searchTransactions = async (body) => {
+  try {
+    if (body.status === "unsettled") {
+      const response = await searchUnsettledTransactions(body);
+      return response;
+    }
+    if (body.status === "settled") {
+      const response = await searchSettledTransactions(body);
+      return response;
+    }
+    return ["Invalid request: Request body format incorrect"];
+  } catch (e) {
+    console.log(e);
+    return e;
+  }
+};
+
+export const getTransaction = async (id) => {
+  const response = await axios.post(baseUrl, {
+    getTransactionDetailsRequest: {
+      merchantAuthentication: authentication,
+      transId: id,
+    },
+  });
+  if (response.data.messages.resultCode !== "Ok") {
+    return { error: "Resource was not found, please try again" };
+  }
+  const data = formatTransactions([response.data.transaction]);
+  const newData = data[0];
+  return newData;
+};
+
+////////////////////////// Process Transactions /////////////////////////////////////
+////////////////////////// Process Transactions /////////////////////////////////////
+////////////////////////// Process Transactions /////////////////////////////////////
 export const generateTransaction = async () => {
   const amount = ((Math.random() * 10000) / 100).toFixed(2);
   const response = await axios.post(baseUrl, {
@@ -183,38 +224,6 @@ export const generateTransaction = async () => {
     },
   });
   return response.data.transactionResponse;
-};
-
-export const searchTransactions = async (body) => {
-  try {
-    if (body.status === "unsettled") {
-      const response = await searchUnsettledTransactions(body);
-      return response;
-    }
-    if (body.status === "settled") {
-      const response = await searchSettledTransactions(body);
-      return response;
-    }
-    return ["Invalid request: Request body format incorrect"];
-  } catch (e) {
-    console.log(e);
-    return e;
-  }
-};
-
-export const getTransaction = async (id) => {
-  const response = await axios.post(baseUrl, {
-    getTransactionDetailsRequest: {
-      merchantAuthentication: authentication,
-      transId: id,
-    },
-  });
-  if (response.data.messages.resultCode !== "Ok") {
-    return { error: "Resource was not found, please try again" };
-  }
-  const data = formatTransactions([response.data.transaction]);
-  const newData = data[0];
-  return newData;
 };
 
 export const voidTransaction = async (id) => {
@@ -283,7 +292,7 @@ export const getFormToken = async (body) => {
           {
             settingName: "hostedPaymentReturnOptions",
             settingValue:
-              '{"showReceipt": true, "url": "http://localhost:3000/", "urlText": "Continue", "cancelUrl": "http://localhost:3000/", "cancelUrlText": "Cancel"}',
+              '{"showReceipt": true, "url": "https://main--benevolent-scone-9283d1.netlify.app/", "urlText": "Continue", "cancelUrl": "https://main--benevolent-scone-9283d1.netlify.app/", "cancelUrlText": "Cancel"}',
           },
           {
             settingName: "hostedPaymentButtonOptions",
@@ -341,6 +350,9 @@ export const getBatchStats = async (id) => {
   return response.data.batch;
 };
 
+////////////////////////// Custom Workflows /////////////////////////////////////
+////////////////////////// Custom Workflows /////////////////////////////////////
+////////////////////////// Custom Workflows /////////////////////////////////////
 export const last7Totals = async () => {
   const last7Totals = [];
   const today = new Date();
@@ -405,6 +417,9 @@ export const getUnsettledTotal = async () => {
   };
 };
 
+////////////////////////// Customers /////////////////////////////////////
+////////////////////////// Customers /////////////////////////////////////
+////////////////////////// Customers /////////////////////////////////////
 export const createCustomerWPayment = async (body) => {
   const { description, email, first, last, company, street, city, state, zip } =
     body;

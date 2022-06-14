@@ -14,6 +14,9 @@ dotenv.config();
 
 app.use(express.json());
 
+// Prod Live url: https://main--benevolent-scone-9283d1.netlify.app
+// Devurl: http://localhost:3000/
+
 const corsOptions = {
   origin: "https://main--benevolent-scone-9283d1.netlify.app",
   credentials: true,

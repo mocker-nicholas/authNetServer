@@ -5,22 +5,38 @@ import transactionRouter from "./routes/transactionrouter.js";
 import vtRouter from "./routes/vtrouter.js";
 import reportingRouter from "./routes/reportingrouter.js";
 import customerRouter from "./routes/customerRouter.js";
+import invoiceRouter from "./routes/invoicerouter.js";
 import session from "express-session";
 import { sessionStuff } from "./middleware.js";
-const PORT = process.env.PORT || 8080;
+import mysql from "mysql";
 
+export const connection = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: process.env.DB_SECRET,
+  database: "authyinvoices",
+});
+
+connection.connect((err) => {
+  if (err) {
+    console.log(`Database Connection Error: ${err}`);
+  } else {
+    console.log("Connection to Database Established");
+  }
+});
+
+const PORT = process.env.PORT || 8080;
 const app = express();
 dotenv.config();
-
 app.use(express.json());
-
-// Prod Live url: https://main--benevolent-scone-9283d1.netlify.app
-// Devurl: http://localhost:3000/
 
 const corsOptions = {
   origin: "https://main--benevolent-scone-9283d1.netlify.app",
   credentials: true,
 };
+// Prod Live url: https://main--benevolent-scone-9283d1.netlify.app
+// Devurl: http://localhost:3000/
+
 const sessionConfig = {
   secret: "keyboard cat",
   resave: false,
@@ -37,6 +53,7 @@ app.use("/api/transaction", transactionRouter);
 app.use("/api/vt", vtRouter);
 app.use("/api/reporting", reportingRouter);
 app.use("/api/customer", customerRouter);
+app.use("/api/invoice", invoiceRouter);
 
 app.get("/", (req, res) => {
   res.send("authNetServer is online");

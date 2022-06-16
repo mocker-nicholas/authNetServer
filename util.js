@@ -26,6 +26,36 @@ export const pickRand = (arr) => {
   return arr[Math.floor(Math.random() * arr.length)];
 };
 
+export const randId = () => {
+  return Math.floor(100000 + Math.random() * 900000);
+};
+
+export class Invoice {
+  constructor(
+    invoice_number,
+    address,
+    city,
+    state,
+    zip,
+    first_name,
+    last_name,
+    job_description,
+    paid,
+    amount
+  ) {
+    (this.invoice_number = invoice_number),
+      (this.address = address),
+      (this.city = city),
+      (this.state = state),
+      (this.zip = zip),
+      (this.first_name = first_name),
+      (this.last_name = last_name),
+      (this.job_description = job_description),
+      (this.paid = paid),
+      (this.amount = amount);
+  }
+}
+
 export const formatTransactions = (transactions) => {
   if (transactions) {
     const frontEndTransactions = transactions.map((trans) => {

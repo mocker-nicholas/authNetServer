@@ -31,11 +31,11 @@ dotenv.config();
 app.use(express.json());
 
 const corsOptions = {
-  origin: "https://main--benevolent-scone-9283d1.netlify.app",
+  origin: "http://localhost:3000",
   credentials: true,
 };
 // Prod Live url: https://main--benevolent-scone-9283d1.netlify.app
-// Devurl: http://localhost:3000/
+// Devurl: http://localhost:3000
 
 const sessionConfig = {
   secret: "keyboard cat",

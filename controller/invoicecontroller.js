@@ -47,8 +47,10 @@ export const createInvoice = (req, res, next) => {
     if (error) {
       return res.json([{ error: `Database Error: ${error}` }]);
     } else {
+      console.log(result.insertId);
       return res.json({
         message: "Your Invoice has been created",
+        invoice_number: invoice_number,
       });
     }
   });
@@ -57,7 +59,7 @@ export const createInvoice = (req, res, next) => {
 export const deleteInvoice = (req, res, next) => {
   const { id } = req.params;
   connection.query(
-    `DELETE * FROM invoices WHERE invoice_number = ${id} `,
+    `DELETE FROM invoices WHERE invoice_number = ${id} `,
     (error, result, fields) => {
       if (error) {
         return res.json([{ error: `Database Error: ${error}` }]);

@@ -47,7 +47,6 @@ export const createInvoice = (req, res, next) => {
     if (error) {
       return res.json([{ error: `Database Error: ${error}` }]);
     } else {
-      console.log(result.insertId);
       return res.json({
         message: "Your Invoice has been created",
         invoice_number: invoice_number,
@@ -66,6 +65,16 @@ export const deleteInvoice = (req, res, next) => {
       } else {
         return res.json(result);
       }
+    }
+  );
+};
+
+export const markInvoiceAsPaid = (req, res, next) => {
+  const { id } = req.params;
+  connection.query(
+    `UPDATE invoices SET paid = 1 WHERE invoice_number = ${id}`,
+    (error, result, fields) => {
+      return;
     }
   );
 };

@@ -40,7 +40,7 @@ const corsOptions = {
 // Devurl: http://localhost:3000
 
 const sessionConfig = {
-  secret: process.send.SECRET,
+  secret: process.env.SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false },

@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import fs from "fs";
 import transactionRouter from "./routes/transactionrouter.js";
 import vtRouter from "./routes/vtrouter.js";
 import reportingRouter from "./routes/reportingrouter.js";
@@ -11,15 +12,16 @@ import { sessionStuff } from "./middleware.js";
 import mysql from "mysql";
 
 export const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
+  host: process.env.HOST,
+  user: process.env.USER,
   password: process.env.DB_SECRET,
-  database: "authyinvoices",
+  database: process.env.DB,
+  port: 3306,
 });
 
 connection.connect((err) => {
   if (err) {
-    console.log(`Database Connection Error: ${err}`);
+    console.log(`Database Connection Error: ${err.stack}`);
   } else {
     console.log("Connection to Database Established");
   }

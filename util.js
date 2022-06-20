@@ -161,6 +161,59 @@ const getBatch = async (id, offset) => {
   return data;
 };
 
+export const daysTransactions = async (day) => {
+  const firstDate = day.substring(0, 10);
+  const response = await axios.post(baseUrl, {
+    getSettledBatchListRequest: {
+      merchantAuthentication: authentication,
+      firstSettlementDate: `${firstDate}T00:00:00Z`,
+      lastSettlementDate: `${firstDate}T00:00:00Z`,
+    },
+  });
+  if (response.data.batchList) {
+    let offset = 1;
+    let arrLength = 20;
+    let transactions = [];
+    while (arrLength === 20) {
+      const batchTrans = await getBatch(
+        response.data.batchList[0].batchId,
+        offset
+      );
+      if (!batchTrans.transactions) {
+        const totalAmount = transactions
+          .map((tran) => tran.settleAmount)
+          .reduce((curr, accum) => parseFloat(curr) + parseFloat(accum));
+        return { date: firstDate, amount: parseFloat(totalAmount).toFixed(2) };
+      }
+      arrLength = batchTrans.transactions.length;
+      batchTrans.transactions.map((tran) => transactions.push(tran));
+      offset++;
+    }
+    const totalAmount = transactions
+      .map((tran) => tran.settleAmount)
+      .reduce((curr, accum) => parseFloat(curr) + parseFloat(accum));
+    return { date: firstDate, amount: parseFloat(totalAmount).toFixed(2) };
+  } else {
+    return { date: firstDate, amount: "0.00" };
+  }
+};
+
+export const monthsTransactions = async (year, month) => {
+  const date = new Date(Date.UTC(year, month, 1));
+  const days = [];
+  while (date.getUTCMonth() === month) {
+    days.push(new Date(date));
+    date.setUTCDate(date.getUTCDate() + 1);
+  }
+  const totals = await Promise.all(
+    days.map(async (day) => {
+      const result = await daysTransactions(day.toISOString());
+      return result;
+    })
+  );
+  return totals;
+};
+
 export const searchSettledTransactions = async (body) => {
   const response = await axios.post(baseUrl, {
     getSettledBatchListRequest: {

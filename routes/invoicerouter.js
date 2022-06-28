@@ -9,7 +9,7 @@ import {
 
 const router = express.Router();
 
-router.route("/").get(getAllInvoices);
+router.route("/").post(getAllInvoices);
 
 router.route("/create").post(createInvoice);
 

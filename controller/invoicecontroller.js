@@ -60,10 +60,14 @@ export const deleteInvoice = (req, res, next) => {
   connection.query(
     `DELETE FROM invoices WHERE invoice_number = ${id} `,
     (error, result, fields) => {
-      if (error) {
-        return res.json([{ error: `Database Error: ${error}` }]);
+      if (error || result.affectedRows === 0) {
+        return res.json([
+          {
+            error: `Database Error: There was a problem deleting your invoice`,
+          },
+        ]);
       } else {
-        return res.json(result);
+        return res.json([{ success: `invoice ${id} has been deleted` }]);
       }
     }
   );

@@ -23,6 +23,39 @@ export const getAllCustomers = async (req, res, next) => {
   }
 };
 
+export const searchCustomers = async (req, res, next) => {
+  const { search_type, value } = req.body;
+  if (search_type === "id") {
+    try {
+      const response = await getCustomerProfile(value.trim());
+      return res.json([response]);
+    } catch (e) {
+      return res.json({ error: "Server error" });
+    }
+  } else {
+    try {
+      let names = value.split(" ");
+      const first = names[0];
+      const last = names[1] || "";
+      const customers = await getCustomers();
+      const matches = customers.filter((cust) => {
+        if (
+          cust.profile.paymentProfiles[0].billTo.firstName.toLowerCase() ===
+            first.toLowerCase().trim() ||
+          cust.profile.paymentProfiles[0].billTo.lastName.toLowerCase() ===
+            last.toLowerCase().trim()
+        ) {
+          return cust;
+        }
+      });
+      return res.json(matches);
+    } catch (e) {
+      console.log(e);
+      return res.json({ error: "Server error" });
+    }
+  }
+};
+
 export const getSingleCustomer = async (req, res, next) => {
   try {
     const { id } = req.params;

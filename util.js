@@ -584,6 +584,8 @@ export const getCustomers = async (body) => {
   }
 };
 
+export const searchCustomerByName = () => {};
+
 export const chargeACustomer = async (body) => {
   const response = await getCustomerProfile(body.id);
   const charge = await axios.post(baseUrl, {

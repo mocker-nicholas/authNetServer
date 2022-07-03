@@ -3,6 +3,7 @@ import {
   getCustomers,
   getCustomerProfile,
   chargeACustomer,
+  deleteCustomerProfile,
 } from "../util.js";
 
 export const createCustomer = async (req, res, next) => {
@@ -35,10 +36,16 @@ export const searchCustomers = async (req, res, next) => {
   } else {
     try {
       let names = value.split(" ");
-      const first = names[0];
-      const last = names[1] || "";
+      const first = names[0] === undefined ? "firstname" : names[0];
+      const last = names[1] === undefined ? "lastname" : names[1];
+      console.log(first, last);
       const customers = await getCustomers();
       const matches = customers.filter((cust) => {
+        console.log(
+          cust.profile.paymentProfiles[0].billTo.firstName,
+          cust.profile.paymentProfiles[0].billTo.lastName,
+          cust.profile.customerProfileId
+        );
         if (
           cust.profile.paymentProfiles[0].billTo.firstName.toLowerCase() ===
             first.toLowerCase().trim() ||
@@ -73,5 +80,11 @@ export const getSingleCustomer = async (req, res, next) => {
 
 export const chargeAProfile = async (req, res, next) => {
   const response = await chargeACustomer(req.body);
+  return res.json(response);
+};
+
+export const deleteCustomer = async (req, res, next) => {
+  const { id } = req.params;
+  const response = await deleteCustomerProfile(id);
   return res.json(response);
 };

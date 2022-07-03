@@ -13,5 +13,5 @@ export const unsettledTotal = async (req, res) => {
 export const monthData = async (req, res, next) => {
   const { year, month } = req.body;
   const response = await monthsTransactions(year, month);
-  return res.send(response);
+  return res.json(response);
 };

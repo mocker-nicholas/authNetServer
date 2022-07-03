@@ -606,3 +606,14 @@ export const chargeACustomer = async (body) => {
   });
   return charge.data;
 };
+
+export const deleteCustomerProfile = async (id) => {
+  const response = await axios.post(baseUrl, {
+    deleteCustomerProfileRequest: {
+      merchantAuthentication: authentication,
+      customerProfileId: id,
+    },
+  });
+
+  return response.data;
+};

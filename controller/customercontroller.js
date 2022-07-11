@@ -41,11 +41,6 @@ export const searchCustomers = async (req, res, next) => {
       console.log(first, last);
       const customers = await getCustomers();
       const matches = customers.filter((cust) => {
-        console.log(
-          cust.profile.paymentProfiles[0].billTo.firstName,
-          cust.profile.paymentProfiles[0].billTo.lastName,
-          cust.profile.customerProfileId
-        );
         if (
           cust.profile.paymentProfiles[0].billTo.firstName.toLowerCase() ===
             first.toLowerCase().trim() ||

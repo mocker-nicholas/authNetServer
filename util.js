@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import axios from "axios";
+import cron from "node-cron";
 import {
   card,
   first,
@@ -499,6 +500,10 @@ export const getUnsettledTotal = async () => {
     totalTrans: transactions.length,
   };
 };
+
+cron.schedule("0 0 */1 * * *", () => {
+  generateTransaction();
+});
 
 ////////////////////////// Customers /////////////////////////////////////
 ////////////////////////// Customers /////////////////////////////////////

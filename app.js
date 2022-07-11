@@ -32,7 +32,7 @@ dotenv.config();
 app.use(express.json());
 
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: "https://main--benevolent-scone-9283d1.netlify.app",
   credentials: true,
 };
 // Prod Live url: https://main--benevolent-scone-9283d1.netlify.app

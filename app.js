@@ -1,7 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import fs from "fs";
 import transactionRouter from "./routes/transactionrouter.js";
 import vtRouter from "./routes/vtrouter.js";
 import reportingRouter from "./routes/reportingrouter.js";
@@ -33,7 +32,7 @@ dotenv.config();
 app.use(express.json());
 
 const corsOptions = {
-  origin: "https://main--benevolent-scone-9283d1.netlify.app",
+  origin: "http://localhost:3000",
   credentials: true,
 };
 // Prod Live url: https://main--benevolent-scone-9283d1.netlify.app
